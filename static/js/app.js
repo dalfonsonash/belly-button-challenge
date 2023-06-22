@@ -95,7 +95,8 @@ function updateBubbleChart(data, sampleId) {
     title: 'OTU Frequency',
     xaxis: { title: 'OTU ID' },
     yaxis: { title: 'Sample Values' },
-    width: 800
+    width: 950,
+    height: 500
   };
 
   // Update the bubble chart
@@ -108,7 +109,10 @@ function updateBubbleChart(data, sampleId) {
 function updateMetadata(data, sampleId) {
   // Filter the data to find the metadata for the selected sample ID
   var selectedMetadata = data.metadata.find(metadata => metadata.id.toString() === sampleId.toString());
-
+  
+  // Retrieve weekly wash frequency value
+  var weeklyFreq = selectedMetadata.wfreq;
+  
   // Select the metadata panel
   var metadataPanel = d3.select("#sample-metadata");
 
@@ -125,7 +129,42 @@ function updateMetadata(data, sampleId) {
       metadataPanel.text("No metadata found for the selected sample ID.");
     }
   }
-
+  var data = [
+    {
+      type: "indicator",
+      mode: "gauge+number+delta",
+      value: 420,
+      title: { text: "Belly Button Washing Frequency", font: { size: 24 } },
+      delta: { reference: 400, increasing: { color: "RebeccaPurple" } },
+      gauge: {
+        axis: { range: [null, 500], tickwidth: 1, tickcolor: "darkblue" },
+        bar: { color: "darkblue" },
+        bgcolor: "white",
+        borderwidth: 2,
+        bordercolor: "gray",
+        steps: [
+          { range: [0, 250], color: "cyan" },
+          { range: [250, 400], color: "royalblue" }
+        ],
+        threshold: {
+          line: { color: "red", width: 4 },
+          thickness: 0.75,
+          value: 490
+        }
+      }
+    }
+  ];
+  
+  var layout = {
+    width: 500,
+    height: 400,
+    margin: { t: 25, r: 25, l: 25, b: 25 },
+    paper_bgcolor: "lavender",
+    font: { color: "darkblue", family: "Arial" }
+  };
+  
+  Plotly.newPlot('myDiv', data, layout);
+  
 
   function optionChanged(sampleId) {
     console.log("optionChanged called");
@@ -135,4 +174,9 @@ function updateMetadata(data, sampleId) {
     updateBarChart(dataset, sampleId);
     updateBubbleChart(dataset,sampleId);
     updateMetadata(dataset, sampleId);
+    updateGaugeChart(weeklyFreq);
   } 
+
+ 
+  
+  
