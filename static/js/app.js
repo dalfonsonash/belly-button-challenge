@@ -1,4 +1,5 @@
-var dataset; // Declare the global variable
+var dataset; // Declare the data global variable
+var weeklyFreq; // Declare the weekly wash frequency global variable
 
 function init(data) {
   dataset = data;
@@ -129,31 +130,54 @@ function updateMetadata(data, sampleId) {
       metadataPanel.text("No metadata found for the selected sample ID.");
     }
   }
-  var data = [
-    {
-      type: "indicator",
-      mode: "gauge+number+delta",
-      value: 420,
-      title: { text: "Belly Button Washing Frequency", font: { size: 24 } },
-      delta: { reference: 400, increasing: { color: "RebeccaPurple" } },
-      gauge: {
-        axis: { range: [null, 500], tickwidth: 1, tickcolor: "darkblue" },
-        bar: { color: "darkblue" },
-        bgcolor: "white",
-        borderwidth: 2,
-        bordercolor: "gray",
-        steps: [
-          { range: [0, 250], color: "cyan" },
-          { range: [250, 400], color: "royalblue" }
-        ],
-        threshold: {
-          line: { color: "red", width: 4 },
-          thickness: 0.75,
-          value: 490
-        }
-      }
+// Function to update the weekly wash frequency
+function updateGaugeChart(weeklyFreq){
+  
+  // Select the gauge chart element
+  var gaugeChart = document.getElementById("gauge");
+  
+  var trace = {
+    type: "indicator",
+    mode: "gauge+number+delta",
+    value: weeklyFreq,
+    title: { text: "Belly Button Washing Frequency", font: { size: 24 } },
+    delta: {
+      reference: weeklyFreq,
+      increasing: { color: "RebeccaPurple" },
+      title: { text: "Number of Washes per Week:", font: { size: 16 } }
+    },
+    gauge: {
+      axis: { range: [null, 9], tickwidth: 0, tickcolor: "darkblue" },
+      bar: { color: "darkblue", thickness: 0.05 },
+      bgcolor: "white",
+      borderwidth: 2,
+      bordercolor: "gray",
+      steps: [
+        { range: [0, 1], color: "#f7fbff" },
+        { range: [1, 2], color: "#deebf7" },
+        { range: [2, 3], color: "#c6dbef"},
+        { range: [3, 4], color: "#9ecae1"},
+        { range: [4, 5], color: "#6baed6"},
+        { range: [5, 6], color: "#4292c6"},
+        { range: [6, 7], color: "#2171b5"},
+        { range: [7, 8], color: "#08519c"},
+        { range: [8, 9], color: "#08306b"}
+      ],
+      threshold: {
+        line: { reference: weeklyFreq, color: "red", width: 4 },
+        thickness: 0.75,
+        value: weeklyFreq
+      },
+      textinfo: "value",
+      marker: {
+        colors: ["transparent"],
+        line: { color: "black", width: 2 },
+        size: 10
+      },
     }
-  ];
+  };
+  
+  var data = [trace];
   
   var layout = {
     width: 500,
@@ -163,8 +187,9 @@ function updateMetadata(data, sampleId) {
     font: { color: "darkblue", family: "Arial" }
   };
   
-  Plotly.newPlot('myDiv', data, layout);
-  
+  Plotly.newPlot(gaugeChart, data, layout);
+
+}
 
   function optionChanged(sampleId) {
     console.log("optionChanged called");
@@ -174,7 +199,7 @@ function updateMetadata(data, sampleId) {
     updateBarChart(dataset, sampleId);
     updateBubbleChart(dataset,sampleId);
     updateMetadata(dataset, sampleId);
-    updateGaugeChart(weeklyFreq);
+    updateGaugeChart(sampleId);
   } 
 
  
