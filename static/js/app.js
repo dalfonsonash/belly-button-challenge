@@ -1,3 +1,12 @@
+// Read the samples.json file
+d3.json("https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json")
+  .then(jsonData => {
+    data = jsonData;
+
+    // Call the init function to initialize the dashboard
+    init(data);
+  });
+
 var dataset; // Declare the data global variable
 var weeklyFreq; // Declare the weekly wash frequency global variable
 
@@ -25,15 +34,6 @@ function init(data) {
   updateBubbleChart(data, initialId);
   updateMetadata(data, initialId);
 }
-
-// Read the samples.json file
-d3.json("https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json")
-  .then(jsonData => {
-    data = jsonData;
-
-    // Call the init function to initialize the dashboard
-    init(data);
-  });
 
 function updateBarChart(data, sampleId) {
   
@@ -131,16 +131,18 @@ function updateMetadata(data, sampleId) {
     }
   }
 // Function to update the weekly wash frequency
-function updateGaugeChart(weeklyFreq){
-  
+function updateGaugeChart(data){
+  // Retrieve weekly wash frequency value
+  var weeklyFreq = data.metadata.find(metadata => metadata.id.toString() === sampleId.toString()).wfreq;
+
   // Select the gauge chart element
-  var gaugeChart = document.getElementById("gauge");
+  var gaugeChart = "gauge";
   
   var trace = {
     type: "indicator",
     mode: "gauge+number+delta",
     value: weeklyFreq,
-    title: { text: "Belly Button Washing Frequency", font: { size: 24 } },
+    title: { text: "Weekly Washing Frequency", font: { size: 24 } },
     delta: {
       reference: weeklyFreq,
       increasing: { color: "RebeccaPurple" },
@@ -199,7 +201,7 @@ function updateGaugeChart(weeklyFreq){
     updateBarChart(dataset, sampleId);
     updateBubbleChart(dataset,sampleId);
     updateMetadata(dataset, sampleId);
-    updateGaugeChart(sampleId);
+    
   } 
 
  
