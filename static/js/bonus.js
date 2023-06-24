@@ -1,43 +1,3 @@
-// Read the samples.json file
-d3.json("https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json")
-  .then(jsonData => {
-    data = jsonData;
-
-    // Call the init function to initialize the dashboard
-    init(data);
-  });
-
-var dataset; // Declare the data global variable
-
-function init(data) {
-  dataset = data;
-  // Populate the dropdown menu with test subject IDs
-  var dropdown = d3.select("#selDataset");
-
-  data.names.forEach(sampleId => {
-    dropdown.append("option").text(sampleId).property("value", sampleId);
-  });
-
-  // Add an event listener to the dropdown menu
-  dropdown.on("change", function () {
-    // Get the selected sample ID
-    var selectedSampleId = dropdown.property("value");
-
-    // Call the update functions with the selected sample ID
-    updateBarChart(data, selectedSampleId);
-    updateBubbleChart(data, selectedSampleId);
-    updateMetadata(data, selectedSampleId);
-    updateGaugeChart(data, selectedSampleId);
-  });
-
-  // Call the update functions with the first test subject ID to initialize the charts
-  var initialId = data.names[0];
-  updateBarChart(data, initialId);
-  updateBubbleChart(data, initialId);
-  updateMetadata(data, initialId);
-  updateGaugeChart(data, initialId);
-}
-
 function updateGaugeChart(data, sampleId) {
   // Retrieve weekly wash frequency value
   var weeklyFreq = data.metadata.find(metadata => metadata.id.toString() === sampleId.toString()).wfreq;
@@ -102,9 +62,6 @@ function updateGaugeChart(data, sampleId) {
 
 function optionChanged(sampleId) {
   var sampleId = document.getElementById("selDataset").value;
-  updateBarChart(dataset, sampleId);
-  updateBubbleChart(dataset, sampleId);
-  updateMetadata(dataset, sampleId);
   updateGaugeChart(dataset, sampleId);
 }
 

@@ -1,14 +1,12 @@
-// Read the samples.json file
 d3.json("https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json")
   .then(jsonData => {
     data = jsonData;
-
-    // Call the init function to initialize the dashboard
+   // Call the init function to initialize the dashboard
     init(data);
   });
-
-var dataset; // Declare the data global variable
-var weeklyFreq; // Declare the weekly wash frequency global variable
+// Declare global variables
+var dataset; 
+var weeklyFreq;
 
 function init(data) {
   dataset = data;
@@ -36,7 +34,6 @@ function init(data) {
 }
 
 function updateBarChart(data, sampleId) {
-  
   // Filter the data to find the sample with the selected ID
   var selectedSample = data.samples.find(sample => sample.id === sampleId) ?? {};
   
@@ -65,7 +62,6 @@ function updateBarChart(data, sampleId) {
   // Plot the bar chart
   Plotly.newPlot("bar", data, layout);
   } 
-
 
 function updateBubbleChart(data, sampleId) {
   
@@ -102,19 +98,13 @@ function updateBubbleChart(data, sampleId) {
 
   // Update the bubble chart
   Plotly.newPlot('bubble', data, layout);
- 
 } 
-
 
 // Populate the Demographic Info.
 function updateMetadata(data, sampleId) {
   // Filter the data to find the metadata for the selected sample ID
   var selectedMetadata = data.metadata.find(metadata => metadata.id.toString() === sampleId.toString());
-  
-  // Retrieve weekly wash frequency value
   var weeklyFreq = selectedMetadata.wfreq;
-  
-  // Select the metadata panel
   var metadataPanel = d3.select("#sample-metadata");
 
   // Clear the existing metadata
@@ -130,69 +120,7 @@ function updateMetadata(data, sampleId) {
       metadataPanel.text("No metadata found for the selected sample ID.");
     }
   }
-// Function to update the weekly wash frequency
-function updateGaugeChart(data){
-  // Retrieve weekly wash frequency value
-  var weeklyFreq = data.metadata.find(metadata => metadata.id.toString() === sampleId.toString()).wfreq;
-
-  // Select the gauge chart element
-  var gaugeChart = "gauge";
-  
-  var trace = {
-    type: "indicator",
-    mode: "gauge+number+delta",
-    value: weeklyFreq,
-    title: { text: "Weekly Washing Frequency", font: { size: 24 } },
-    delta: {
-      reference: weeklyFreq,
-      increasing: { color: "RebeccaPurple" },
-      title: { text: "Number of Washes per Week:", font: { size: 16 } }
-    },
-    gauge: {
-      axis: { range: [null, 9], tickwidth: 0, tickcolor: "darkblue" },
-      bar: { color: "darkblue", thickness: 0.05 },
-      bgcolor: "white",
-      borderwidth: 2,
-      bordercolor: "gray",
-      steps: [
-        { range: [0, 1], color: "#f7fbff" },
-        { range: [1, 2], color: "#deebf7" },
-        { range: [2, 3], color: "#c6dbef"},
-        { range: [3, 4], color: "#9ecae1"},
-        { range: [4, 5], color: "#6baed6"},
-        { range: [5, 6], color: "#4292c6"},
-        { range: [6, 7], color: "#2171b5"},
-        { range: [7, 8], color: "#08519c"},
-        { range: [8, 9], color: "#08306b"}
-      ],
-      threshold: {
-        line: { reference: weeklyFreq, color: "red", width: 4 },
-        thickness: 0.75,
-        value: weeklyFreq
-      },
-      textinfo: "value",
-      marker: {
-        colors: ["transparent"],
-        line: { color: "black", width: 2 },
-        size: 10
-      },
-    }
-  };
-  
-  var data = [trace];
-  
-  var layout = {
-    width: 500,
-    height: 400,
-    margin: { t: 25, r: 25, l: 25, b: 25 },
-    paper_bgcolor: "lavender",
-    font: { color: "darkblue", family: "Arial" }
-  };
-  
-  Plotly.newPlot(gaugeChart, data, layout);
-
-}
-
+//
   function optionChanged(sampleId) {
     console.log("optionChanged called");
     var sampleId = document.getElementById("selDataset").value;
